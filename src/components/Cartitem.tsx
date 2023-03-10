@@ -1,37 +1,40 @@
-import {FaChevronUp, FaChevronDown} from 'react-icons/fa'
-import { useDispatch } from 'react-redux';
-import { removeItem, increase, decrease } from '../features/cart/cart';
+import { useDispatch, useSelector } from "react-redux";
+import { decreaseItem, increseItem, removeItem } from "../features/cart/cart";
+import { ICartitem } from "../types";
+import { ChevronDown, ChevronUp } from "./Icons";
 
-export interface IProps {
-    id:string;
-    img:string;
-    title:string;
-    price:string;
-    amount:number;
-}
+export const Cartitem = ({ id, img, title, price, amount }: ICartitem) => {
 
-export const Cartitem = ({id,img,title,price,amount}:IProps) => {
-    const dispatch = useDispatch();
-    return(
-        <article className="cart-item">
-            <div>
-                <img src={img} alt="" />
-                <h4 className="item-price">${price}</h4>
-                <button className="remove-btn" onClick={()=>{removeItem(id)}}>remove</button>
-            </div>
-            <div>
-                <button className="amount-btn" onClick={()=>{
-                    dispatch(increase(id))
-                }}>
-                    <FaChevronUp/>
-                </button>
-                <p className='amount'>{amount}</p>
-                <button className="amount-btn" onClick={()=>{
-                    dispatch(decrease(id))
-                }}>
-                    <FaChevronDown/>
-                </button>
-            </div>
-        </article>
-    )
-}
+    const dispatch = useDispatch()
+
+  return (
+    <article className="cart-item">
+      <img src={img} alt={title} />
+      <div>
+        <h4>{title}</h4>
+        <h4 className="item-price">${price}</h4>
+        {/* remove btn */}
+        <button className="remove-btn" onClick={() => dispatch(removeItem(id))}>remove</button>
+      </div>
+      <div>
+        {/* increase amount */}
+        <button className="amount-btn" onClick={() => dispatch(increseItem(id))}>
+          <ChevronUp />
+        </button>
+        {/* amount */}
+        <p className="amount">{amount}</p>
+        {/* decrease amount */}
+        <button className="amount-btn" onClick={() => {
+          if(amount === 1){
+            dispatch(removeItem(id))
+          }
+          else{
+            dispatch(decreaseItem(id))
+          }
+        }}>
+          <ChevronDown />
+        </button>
+      </div>
+    </article>
+  );
+};
